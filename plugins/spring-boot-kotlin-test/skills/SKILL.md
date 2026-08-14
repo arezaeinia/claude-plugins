@@ -15,7 +15,7 @@ This service follows the [Practical Test Pyramid](https://martinfowler.com/artic
 - **Unit tests**: fast, isolated, mock all dependencies — used for services and utilities
 - **Integration tests**: hit a real Postgres TestContainer — used for repositories
 - **Slice tests**: Spring context slices (`@WebMvcTest`) — used for controllers
-- **Client tests**: `MockRestServiceServer` — used for outbound HTTP clients
+- **Client tests**: WireMock (`@WireMockTest`) — used for outbound HTTP clients
 
 **Default test framework**: Kotest `FunSpec` with `SpringExtension` for all test types.  
 **Default mock library**: MockK (`mockk()`, `every {}`, `verify {}`) — avoid Mockito in new tests.
@@ -31,7 +31,7 @@ Read the relevant template file before generating test code. Each file is a read
 | Controller (behaviour + auth) | `templates/ControllerTest_template.md` | REST endpoints; two classes: one for behaviour, one for auth                   |
 | Service                       | `templates/ServiceTest_template.md`    | Pure unit tests for service classes                                            |
 | Repository                    | `templates/RepositoryTest_template.md` | Integration tests against real Postgres via TestContainer                      |
-| Client                        | `templates/ClientTest_template.md`     | Outbound HTTP clients using `MockRestServiceServer`                            |
+| Client                        | `templates/ClientTest_template.md`     | Outbound HTTP clients using WireMock (`@WireMockTest`)                         |
 | Fixtures                      | `templates/Fixtures_template.md`         | Test data helpers — read this before creating any fixture, builder, or JSON file |
 | Parameterized tests           | `templates/ParameterizedTest_template.md` | Multiple inputs against the same logic — `forEach` loop or Kotest `withData`   |
 
@@ -73,12 +73,12 @@ Read the relevant template file before generating test code. Each file is a read
 - Read `templates/Fixtures_template.md` before creating any test data helper
 - Pick the right scope: **top-level functions** for data shared across test classes (e.g. `createOrgUnit()`), **companion object** for complex hierarchies (e.g. `OrgUnitTestBuilder`), **inline private helpers** for simple objects used only within one test class
 - Always use **default parameter values** so callers only specify what matters for the test
-- **JSON fixtures** for client test responses go in `src/test/resources/fixtures/<client-name>/<scenario>.json` — never inline large JSON strings in test code
+- **JSON fixtures** for client test responses go in `src/test/resources/fixtures/clients/<client-name>/<scenario>.json` — never inline large JSON strings in test code
 
 ### Client tests
-- Store JSON fixtures in `src/test/resources/fixtures/<client-name>/<scenario>.json`
-- Always call `mockServer.verify()` at the end of each test
-- Reset with `mockServer.reset()` in `beforeTest`
+- Store JSON fixtures in `src/test/resources/fixtures/clients/<client-name>/<scenario>.json`
+- Use `verify(getRequestedFor(...))` to assert the request was made
+- Stubs reset automatically between tests — no manual reset needed with `@WireMockTest`
 
 ---
 

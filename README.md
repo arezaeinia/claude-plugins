@@ -1,6 +1,6 @@
 # Claude Plugins
 
-A marketplace of Claude Code plugins. Currently ships the `spring-boot-kotlin-test` plugin — a testing strategy and code-generation skill for Kotlin/Spring Boot services.
+A marketplace of Claude Code plugins focused on test architecture and code quality for Spring Boot services.
 
 ## Plugins
 
@@ -17,6 +17,22 @@ Shapes the test architecture, framework conventions, and maintainability pattern
 - Test fixtures and data builders
 
 **Stack:** Kotest `FunSpec` · MockK · TestContainers · Spring Security Test
+
+---
+
+### `spring-boot-java-test`
+
+Shapes the test architecture, framework conventions, and maintainability patterns for Java/Spring Boot services. Applies the [Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html) end-to-end: the right test type for each class, consistent structure across the codebase, and conventions that keep the suite easy to maintain as it grows.
+
+**Covers:**
+- Controller tests (`@WebMvcTest`) — behaviour and auth as separate classes
+- Service unit tests — no Spring context, pure Mockito
+- Repository integration tests — real Postgres via TestContainers
+- Outbound HTTP client tests — `MockRestServiceServer`
+- Parameterized tests — `@ParameterizedTest` with `@MethodSource` / `@CsvSource`
+- Test fixtures and data builders
+
+**Stack:** Java 21 · JUnit 5 · Mockito · AssertJ · TestContainers · Spring Boot 3.4+
 
 ---
 

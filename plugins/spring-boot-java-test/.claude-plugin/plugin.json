@@ -1,0 +1,9 @@
+{
+  "name": "spring-boot-java-test",
+  "version": "1.0.0",
+  "description": "Shapes the test architecture, framework conventions, and maintainability patterns for Java/Spring Boot services — not just generates test code. Applies the Practical Test Pyramid end-to-end: the right test type for each class, consistent structure across the codebase, and conventions that keep the suite easy to maintain as it grows.",
+  "author": {
+    "name": "Arnia"
+  },
+  "homepage": "https://github.com/arezaeinia/claude-plugins"
+}

@@ -20,6 +20,21 @@
         "ref": "main"
       },
       "homepage": "https://github.com/arezaeinia/claude-plugins"
+    },
+    {
+      "name": "spring-boot-java-test",
+      "description": "Shapes the test architecture, framework conventions, and maintainability patterns for Java/Spring Boot services. Applies the Practical Test Pyramid end-to-end: the right test type for each class, consistent structure across the codebase, and conventions that keep the suite easy to maintain as it grows. Stack: Java 21, Spring Boot 3.4+, JUnit 5, Mockito, AssertJ, TestContainers.",
+      "author": {
+        "name": "Arnia"
+      },
+      "category": "testing",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/arezaeinia/claude-plugins.git",
+        "path": "plugins/spring-boot-java-test",
+        "ref": "main"
+      },
+      "homepage": "https://github.com/arezaeinia/claude-plugins"
     }
   ]
 }
