@@ -5,9 +5,13 @@ Tests for outbound HTTP clients using WireMock (`@WireMockTest`). Load JSON resp
 ```kotlin
 package com.example.project.client
 
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.equalToJson
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.okJson
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.serverError
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
@@ -21,6 +25,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import org.springframework.http.MediaType
 
 @WireMockTest
 class UserClientTest(wmInfo: WireMockRuntimeInfo) : FunSpec() {
@@ -43,6 +48,7 @@ class UserClientTest(wmInfo: WireMockRuntimeInfo) : FunSpec() {
             every { accessTokenManager.getAccessToken(tokenId).accessToken } returns token
         }
 
+        // GET — no request body
         test("returns parsed response on success") {
             val responseJson = UserClientTest::class.java
                 .getResource("/fixtures/clients/user-client/success-response.json")!!
@@ -50,7 +56,7 @@ class UserClientTest(wmInfo: WireMockRuntimeInfo) : FunSpec() {
 
             stubFor(
                 get(urlEqualTo("/api/users?id=123"))
-                    .withHeader("Authorization", com.github.tomakehurst.wiremock.client.WireMock.equalTo("Bearer $token"))
+                    .withHeader("Authorization", equalTo("Bearer $token"))
                     .willReturn(okJson(responseJson))
             )
 
@@ -58,6 +64,32 @@ class UserClientTest(wmInfo: WireMockRuntimeInfo) : FunSpec() {
 
             result.name shouldBe "Alex"
             verify(getRequestedFor(urlEqualTo("/api/users?id=123")))
+        }
+
+        // POST — stub and verify the full request body from a fixture file
+        test("creates resource and returns parsed response") {
+            val requestJson = UserClientTest::class.java
+                .getResource("/fixtures/clients/user-client/create-request.json")!!
+                .readText()
+            val responseJson = UserClientTest::class.java
+                .getResource("/fixtures/clients/user-client/create-success.json")!!
+                .readText()
+
+            stubFor(
+                post(urlEqualTo("/api/users"))
+                    .withHeader("Authorization", equalTo("Bearer $token"))
+                    .withHeader("Content-Type", equalTo(MediaType.APPLICATION_JSON_VALUE))
+                    .withRequestBody(equalToJson(requestJson))
+                    .willReturn(okJson(responseJson))
+            )
+
+            val result = client.createUser(UserCreateRequest(name = "Alex", email = "alex@example.com"))
+
+            result.id shouldBe "123"
+            verify(
+                postRequestedFor(urlEqualTo("/api/users"))
+                    .withRequestBody(equalToJson(requestJson))
+            )
         }
 
         test("returns empty list on server error") {
@@ -84,7 +116,9 @@ src/test/resources/
     └── clients/
         └── user-client/
             ├── success-response.json
-            └── error-response.json
+            ├── error-response.json
+            ├── create-request.json      ← request body for POST/PUT/PATCH
+            └── create-success.json      ← response body
 ```
 
 Example `success-response.json`:
@@ -115,3 +149,5 @@ Example `success-response.json`:
 - Pass `WireMockRuntimeInfo` to get the port and build the client's base URL in the constructor
 - Stubs are reset automatically between tests by `@WireMockTest`
 - Use `verify(getRequestedFor(...))` to assert the request was actually made
+- **POST/PUT/PATCH**: load the full request body from a fixture file and use `withRequestBody(equalToJson(requestJson))` — stricter than field-by-field matching and keeps the contract in one place
+- **GET**: no request body — omit `withRequestBody` entirely

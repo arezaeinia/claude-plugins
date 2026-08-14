@@ -57,7 +57,9 @@ Read the relevant template file before generating test code. Each file is a read
 - Use `spyk()` when you need a real collaborator but want to stub one method on it
 
 ### Repository tests
-- Always `@DataJpaTest` + `@Import(PostgresContainerConfig::class)`
+- Detect the database from `pom.xml` or `build.gradle`: `mysql-connector-j` / `com.mysql` → MySQL, otherwise default to Postgres
+- If no container initializer exists in the project, create one — see `templates/RepositoryTest_template.md` for both Postgres and MySQL variants, and the `spring.factories` registration
+- Use `@DataJpaTest` + `@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)` + `@ContextConfiguration(initializers = [XxxContainerInitializer::class])` — `Replace.NONE` prevents Spring from silently swapping the datasource with H2
 - Clean up with `deleteAllInBatch()` in `beforeEach` — don't rely on `@Transactional` rollback alone
 - Call `entityManager.clear()` after `persistAndFlush()` to force a real DB read on assertions
 - Test DB constraints (unique keys, not-null) explicitly — these are the highest-value repository tests
@@ -79,6 +81,8 @@ Read the relevant template file before generating test code. Each file is a read
 - Store JSON fixtures in `src/test/resources/fixtures/clients/<client-name>/<scenario>.json`
 - Use `verify(getRequestedFor(...))` to assert the request was made
 - Stubs reset automatically between tests — no manual reset needed with `@WireMockTest`
+- **POST/PUT/PATCH**: load the full request body from a fixture file (`fixtures/clients/<client-name>/<operation>-request.json`) and use `withRequestBody(equalToJson(requestJson))` on both the stub and the verify call — stricter than field-by-field matching and keeps the contract in one place
+- **GET**: no request body — omit `withRequestBody` entirely
 
 ---
 

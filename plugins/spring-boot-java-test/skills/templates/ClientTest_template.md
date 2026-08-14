@@ -19,9 +19,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -51,6 +54,7 @@ class UserClientTest {
         when(accessTokenManager.getAccessToken(TOKEN_ID).getAccessToken()).thenReturn(TOKEN);
     }
 
+    // GET — no request body
     @Test
     @DisplayName("returns parsed response on success")
     void returnsParsedResponse() throws IOException {
@@ -69,6 +73,36 @@ class UserClientTest {
 
         assertThat(result.getName()).isEqualTo("Alex");
         verify(getRequestedFor(urlEqualTo("/api/users?id=123")));
+    }
+
+    // POST — stub and verify the full request body from a fixture file
+    @Test
+    @DisplayName("creates resource and returns parsed response")
+    void createsResource() throws IOException {
+        var requestJson = new String(
+            UserClientTest.class.getResourceAsStream("/fixtures/clients/user-client/create-request.json").readAllBytes(),
+            StandardCharsets.UTF_8
+        );
+        var responseJson = new String(
+            UserClientTest.class.getResourceAsStream("/fixtures/clients/user-client/create-success.json").readAllBytes(),
+            StandardCharsets.UTF_8
+        );
+
+        stubFor(
+            post(urlEqualTo("/api/users"))
+                .withHeader("Authorization", equalTo("Bearer " + TOKEN))
+                .withHeader("Content-Type", equalTo(MediaType.APPLICATION_JSON_VALUE))
+                .withRequestBody(equalToJson(requestJson))
+                .willReturn(okJson(responseJson))
+        );
+
+        var result = client.createUser(new UserCreateRequest("Alex", "alex@example.com"));
+
+        assertThat(result.getId()).isEqualTo("123");
+        verify(
+            postRequestedFor(urlEqualTo("/api/users"))
+                .withRequestBody(equalToJson(requestJson))
+        );
     }
 
     @Test
@@ -96,7 +130,9 @@ src/test/resources/
     └── clients/
         └── user-client/
             ├── success-response.json
-            └── error-response.json
+            ├── error-response.json
+            ├── create-request.json      ← request body for POST/PUT/PATCH
+            └── create-success.json      ← response body
 ```
 
 Example `success-response.json`:
@@ -127,3 +163,5 @@ Example `success-response.json`:
 - Inject `WireMockRuntimeInfo` into `@BeforeEach` to get the port and build the client's base URL
 - Stubs are reset automatically between tests by `@WireMockTest`
 - Use `verify(getRequestedFor(...))` to assert the request was actually made
+- **POST/PUT/PATCH**: load the full request body from a fixture file and use `withRequestBody(equalToJson(requestJson))` — stricter than field-by-field matching and keeps the contract in one place
+- **GET**: no request body — omit `withRequestBody` entirely

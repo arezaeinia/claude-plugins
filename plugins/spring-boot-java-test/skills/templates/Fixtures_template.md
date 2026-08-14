@@ -116,7 +116,7 @@ class PaymentServiceTest {
 
 Store expected HTTP response bodies as files — never inline large JSON strings in test code.
 
-**Location:** `src/test/resources/fixtures/<client-name>/<scenario>.json`
+**Location:** `src/test/resources/fixtures/clients/<client-name>/<scenario>.json`
 
 ```
 src/test/resources/
