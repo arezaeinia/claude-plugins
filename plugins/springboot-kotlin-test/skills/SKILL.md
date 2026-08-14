@@ -1,5 +1,5 @@
 ---
-name: kotlin-test-strategy
+name: springboot-kotlin-test 
 description: >
   Testing strategy and code templates for this Kotlin/Spring Boot service.
   Use this skill whenever the user asks to write a test, what kind of test to write,

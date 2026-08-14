@@ -1,0 +1,7 @@
+{
+  "name": "springboot-kotlin-test",
+  "description": "A Claude plugin that generates a test with test-pyramid strategy for a given Kotlin codebase. It analyzes the code and provides recommendations for testing approaches, frameworks, and best practices.",
+  "author": {
+    "name": "Arnia"
+  }
+}
