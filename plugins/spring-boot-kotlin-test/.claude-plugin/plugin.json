@@ -1,7 +1,0 @@
-{
-  "name": "spring-boot-kotlin-test",
-  "description": "Shapes the test architecture, framework conventions, and maintainability patterns for Kotlin/Spring Boot services — not just generates test code. Applies the Practical Test Pyramid: the right test type, the right tooling, and a consistent structure that scales with the codebase.",
-  "author": {
-    "name": "Arnia"
-  }
-}

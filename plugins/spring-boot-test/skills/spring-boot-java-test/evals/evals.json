@@ -1,0 +1,75 @@
+{
+  "skill_name": "spring-boot-java-test",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a test for UserService.createUser()",
+      "expected_output": "A JUnit 5 unit test for UserService using Mockito (@ExtendWith(MockitoExtension.class), @Mock, @InjectMocks), no Spring context, with @Nested/@DisplayName structure and AssertJ assertions",
+      "expectations": [
+        "Skill is invoked (spring-boot-java-test)",
+        "Output uses JUnit 5 (@Test, @ExtendWith(MockitoExtension.class))",
+        "Output uses Mockito (@Mock, @InjectMocks or manual instantiation)",
+        "No Spring context annotations (@SpringBootTest, @ContextConfiguration)",
+        "Output uses AssertJ (assertThat)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add tests for OrderRepository",
+      "expected_output": "A JUnit 5 integration test using @DataJpaTest, TestContainers (Postgres), @AutoConfigureTestDatabase(replace=NONE), and a container initializer class",
+      "expectations": [
+        "Skill is invoked (spring-boot-java-test)",
+        "Output uses @DataJpaTest",
+        "Output uses @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)",
+        "Output includes or references a TestContainers Postgres container initializer",
+        "deleteAllInBatch() used in @BeforeEach"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What kind of test should I write for this controller?\n\n@RestController\npublic class ProductController {\n    private final ProductService productService;\n    @GetMapping(\"/products/{id}\")\n    public ProductDto getProduct(@PathVariable Long id) { return productService.getProduct(id); }\n}",
+      "expected_output": "Recommendation to write two @WebMvcTest classes: one for behaviour (excluding security) and one for auth, using JUnit 5 + @MockitoBean (Spring Boot 3.4+)",
+      "expectations": [
+        "Skill is invoked (spring-boot-java-test)",
+        "Recommends @WebMvcTest slice test",
+        "Mentions two separate test classes: one for behaviour, one for auth",
+        "Mentions @MockitoBean (Spring Boot 3.4+)",
+        "Mentions excluding SecurityAutoConfiguration for the behaviour test"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Write a WireMock test for OrderClient which calls GET /orders/{id}",
+      "expected_output": "A JUnit 5 client test using @WireMockTest, stubbing the GET endpoint, verifying the request was made with getRequestedFor, no withRequestBody on GET",
+      "expectations": [
+        "Skill is invoked (spring-boot-java-test)",
+        "Output uses @WireMockTest annotation",
+        "Output stubs with stubFor(get(...))",
+        "Output uses verify(getRequestedFor(...))",
+        "No withRequestBody on GET request"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I need to test the same validation logic for 5 different inputs in my service test",
+      "expected_output": "JUnit 5 parameterized test using @ParameterizedTest with @MethodSource (Stream<Arguments>) or @CsvSource for simple cases",
+      "expectations": [
+        "Skill is invoked (spring-boot-java-test)",
+        "Output uses @ParameterizedTest",
+        "Output uses @MethodSource or @CsvSource",
+        "If more than 2 fields per case, a record or inner static class is defined for the row type"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "I have a mixed Kotlin/Java project. I need a test for UserService.kt which is written in Kotlin",
+      "expected_output": "Guidance to use the spring-boot-kotlin-test skill instead, since the class under test is a .kt file in a mixed project. The Java skill handles .java classes only in mixed projects.",
+      "expectations": [
+        "Skill is invoked (spring-boot-java-test)",
+        "Output recognises the class under test is a .kt file",
+        "Output redirects to spring-boot-kotlin-test skill for Kotlin class testing",
+        "Output does not generate Java test code for a Kotlin class"
+      ]
+    }
+  ]
+}

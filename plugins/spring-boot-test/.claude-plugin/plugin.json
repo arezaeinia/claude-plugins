@@ -1,0 +1,21 @@
+{
+  "name": "spring-boot-test",
+  "version": "1.0.0",
+  "description": "Test architecture and code generation for Spring Boot services. Covers Kotlin (Kotest, MockK) and Java (JUnit 5, Mockito, AssertJ). Applies the Practical Test Pyramid: right test type, right tooling, consistent structure.",
+  "author": {
+    "name": "Amir Rezaeinia"
+  },
+  "keywords": [
+    "spring-boot",
+    "testing",
+    "kotlin",
+    "java",
+    "kotest",
+    "mockk",
+    "junit5",
+    "mockito",
+    "testcontainers",
+    "wiremock",
+    "assertj"
+  ]
+}

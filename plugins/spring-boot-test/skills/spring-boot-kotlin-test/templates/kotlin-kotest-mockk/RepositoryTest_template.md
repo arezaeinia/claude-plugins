@@ -1,6 +1,6 @@
 # Repository Test Template
 
-Integration test against a real database TestContainer. Default is Postgres — switch to MySQL if the project uses it (check `pom.xml` or `build.gradle` for `mysql-connector-j` or `com.mysql` dependency).
+Integration test against a real database TestContainer. Default is Postgres. If the project uses a different database, use the same initializer pattern with the appropriate TestContainers image and JDBC driver.
 
 ## Setup: Container Initializer
 
@@ -40,7 +40,9 @@ class PostgresContainerInitializer : ApplicationContextInitializer<ConfigurableA
 }
 ```
 
-### MySQL (if project uses MySQL)
+### Other databases
+
+For any other database, apply the same pattern using the matching TestContainers image and JDBC driver. Replace the container type, image tag, and driver class name accordingly:
 
 ```kotlin
 package com.example.project.config
@@ -48,22 +50,23 @@ package com.example.project.config
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.test.context.support.TestPropertySourceUtils
-import org.testcontainers.containers.MySQLContainer
+import org.testcontainers.containers.JdbcDatabaseContainer
 
-class MySQLContainerInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
+class DatabaseContainerInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
     override fun initialize(context: ConfigurableApplicationContext) {
         TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
             context,
-            "spring.datasource.url=${MYSQL.jdbcUrl}",
-            "spring.datasource.username=${MYSQL.username}",
-            "spring.datasource.password=${MYSQL.password}",
-            "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver",
+            "spring.datasource.url=${DB.jdbcUrl}",
+            "spring.datasource.username=${DB.username}",
+            "spring.datasource.password=${DB.password}",
+            "spring.datasource.driver-class-name=<driver-class>",
         )
     }
 
     companion object {
-        private val MYSQL: MySQLContainer<Nothing> =
-            MySQLContainer<Nothing>("mysql:8").apply {
+        // Replace with the appropriate TestContainers container class and image
+        private val DB: JdbcDatabaseContainer<*> =
+            <ContainerClass>("<image>").apply {
                 withDatabaseName("test")
                 withUsername("test")
                 withPassword("test")
@@ -74,16 +77,11 @@ class MySQLContainerInitializer : ApplicationContextInitializer<ConfigurableAppl
 }
 ```
 
-Then register it in `src/test/resources/META-INF/spring.factories`:
+Then register the initializer in `src/test/resources/META-INF/spring.factories`:
 
 ```properties
-# Postgres
 org.springframework.context.ApplicationContextInitializer=\
   com.example.project.config.PostgresContainerInitializer
-
-# MySQL (use this instead if project uses MySQL)
-org.springframework.context.ApplicationContextInitializer=\
-  com.example.project.config.MySQLContainerInitializer
 ```
 
 ---

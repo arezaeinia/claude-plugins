@@ -1,0 +1,102 @@
+{
+  "skill_name": "spring-boot-kotlin-test",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a test for UserService.createUser()",
+      "expected_output": "A Kotest FunSpec unit test for UserService with MockK mocks, no Spring context, using context/test blocks and shouldBe assertions",
+      "expectations": [
+        "Skill is invoked (spring-boot-kotlin-test)",
+        "Output uses Kotest FunSpec",
+        "Output uses MockK (mockk(), every {}, verify {})",
+        "No Spring context annotations present (@SpringBootTest, @ExtendWith(SpringExtension))",
+        "Test uses context('when ...') and test('should ...') structure"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add tests for OrderRepository",
+      "expected_output": "A Kotest FunSpec integration test using @DataJpaTest, TestContainers (Postgres), @AutoConfigureTestDatabase(replace=NONE), and a container initializer",
+      "expectations": [
+        "Skill is invoked (spring-boot-kotlin-test)",
+        "Output uses @DataJpaTest",
+        "Output uses @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)",
+        "Output includes or references a TestContainers Postgres container initializer",
+        "deleteAllInBatch() used in beforeTest or beforeEach"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What kind of test should I write for this controller?\n\n@RestController\nclass ProductController(private val productService: ProductService) {\n    @GetMapping(\"/products/{id}\")\n    fun getProduct(@PathVariable id: Long): ProductDto = productService.getProduct(id)\n}",
+      "expected_output": "Recommendation to write two @WebMvcTest classes: one for behaviour (excluding security) and one for auth, using Kotest + MockkBean",
+      "expectations": [
+        "Skill is invoked (spring-boot-kotlin-test)",
+        "Recommends @WebMvcTest slice test",
+        "Mentions two separate test classes: one for behaviour, one for auth",
+        "Mentions @MockkBean from com.ninjasquad.springmockk",
+        "Mentions excluding SecurityAutoConfiguration for the behaviour test"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Write a WireMock test for OrderClient which calls GET /orders/{id}",
+      "expected_output": "A Kotest FunSpec client test using @WireMockTest, stubbing the GET endpoint, verifying the request was made with getRequestedFor",
+      "expectations": [
+        "Skill is invoked (spring-boot-kotlin-test)",
+        "Output uses @WireMockTest annotation",
+        "Output stubs with stubFor(get(...))",
+        "Output uses verify(getRequestedFor(...))",
+        "No withRequestBody on GET request"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I need to test the same validation logic for 5 different inputs in my service test",
+      "expected_output": "Kotest parameterized test using either listOf(...).forEach { test(...) } or Kotest withData, with a local data class for the row type",
+      "expectations": [
+        "Skill is invoked (spring-boot-kotlin-test)",
+        "Output uses Kotest FunSpec",
+        "Output uses forEach loop or withData for parameterization",
+        "If more than 2 fields per case, a data class is defined for the row type"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a test for UserService.createUser() — this project uses Kotlin with JUnit 5 and Mockito",
+      "expected_output": "A JUnit 5 unit test in Kotlin using @ExtendWith(MockitoExtension::class), @Mock lateinit var for dependencies, @InjectMocks for the subject, whenever(...).thenReturn(...) for stubbing, and AssertJ assertions. No FunSpec or Kotest matchers.",
+      "expectations": [
+        "Skill is invoked (spring-boot-kotlin-test)",
+        "Output is Kotlin syntax (not Java)",
+        "Output uses @ExtendWith(MockitoExtension::class)",
+        "Output uses @Mock and @InjectMocks with lateinit var",
+        "Output uses whenever(...) from mockito-kotlin, not every {} from MockK",
+        "Output uses assertThat(...) from AssertJ, not shouldBe",
+        "No FunSpec, context(), or test() blocks"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Write a controller test for UserController — this project uses Kotlin with JUnit 5 and Mockito (Spring Boot 3.4+)",
+      "expected_output": "Two Kotlin test classes using @WebMvcTest: one behaviour test with @MockitoBean and @Nested/@DisplayName structure excluding security, and one auth test using opaqueToken(). Kotlin syntax throughout.",
+      "expectations": [
+        "Skill is invoked (spring-boot-kotlin-test)",
+        "Output is Kotlin syntax",
+        "Output uses @MockitoBean (not @MockkBean)",
+        "Output uses @Nested inner class with @DisplayName",
+        "Behaviour class excludes SecurityAutoConfiguration and OAuth2ResourceServerAutoConfiguration",
+        "Auth class uses opaqueToken() from spring-security-test"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "I have a mixed Kotlin/Java project. I need a test for UserMapper.java which converts UserEntity to UserDto",
+      "expected_output": "A Java unit test using JUnit 5 and Mockito, since the class under test is a .java file. Output should be Java syntax with @ExtendWith(MockitoExtension.class), @Test, @Nested, and AssertJ assertions.",
+      "expectations": [
+        "Skill is invoked (spring-boot-kotlin-test) or skill directs to spring-boot-java-test",
+        "Output recognises the class under test is a .java file",
+        "Output is Java syntax (not Kotlin)",
+        "Output uses JUnit 5 and Mockito conventions appropriate for Java"
+      ]
+    }
+  ]
+}

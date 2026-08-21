@@ -22,6 +22,26 @@ This service follows the [Practical Test Pyramid](https://martinfowler.com/artic
 
 ---
 
+## Step 0 — Detect project context
+
+Before generating any test code, run the detection script from the project root:
+
+```bash
+<path-to-plugin>/scripts/detect-project-context.sh
+```
+
+The script outputs:
+```
+LANGUAGE=<kotlin|java|mixed>
+FRAMEWORK=<kotest-mockk|junit5-mockito>
+```
+
+> **Mixed projects**: if `LANGUAGE=mixed` and the class under test is a `.kt` file, use the `spring-boot-kotlin-test` skill instead — it handles Kotlin class generation with the correct framework.
+
+This skill is for pure Java projects and for testing `.java` classes in mixed projects.
+
+---
+
 ## Templates
 
 Read the relevant template file before generating test code. Each file is a ready-to-adapt Java example.
@@ -57,8 +77,8 @@ Read the relevant template file before generating test code. Each file is a read
 - Use `@Spy` when you need real logic on a collaborator with one method stubbed
 
 ### Repository tests
-- Detect the database from `pom.xml` or `build.gradle`: `mysql-connector-j` / `com.mysql` → MySQL, otherwise default to Postgres
-- If no container initializer exists in the project, create one — see `templates/RepositoryTest_template.md` for both Postgres and MySQL variants, and the `spring.factories` registration
+- Default to Postgres. If the project uses a different database, check `pom.xml` or `build.gradle` for the JDBC dependency and use the matching TestContainers image and driver
+- If no container initializer exists in the project, create one — see `templates/RepositoryTest_template.md` for the Postgres template and the generic pattern for other databases
 - Use `@DataJpaTest` + `@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)` + `@ContextConfiguration(initializers = XxxContainerInitializer.class)` — `Replace.NONE` prevents Spring from silently swapping the datasource with H2
 - Clean up with `deleteAllInBatch()` in `@BeforeEach` — don't rely on `@Transactional` rollback alone
 - Call `entityManager.clear()` after `persistAndFlush()` to force a real DB read on assertions

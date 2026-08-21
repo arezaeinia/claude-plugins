@@ -1,14 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "arezaeinia-claude-plugins",
-  "description": "A collection of Claude Code plugins focused on test architecture and code quality for Kotlin/Spring Boot services.",
+  "description": "A collection of Claude Code plugins focused on test architecture and code quality for Spring Boot services.",
   "owner": {
     "name": "Arnia"
   },
   "plugins": [
     {
-      "name": "spring-boot-kotlin-test",
-      "description": "Shapes the test architecture, framework conventions, and maintainability patterns for Kotlin/Spring Boot services. Applies the Practical Test Pyramid end-to-end: the right test type for each class, consistent structure across the codebase, and conventions that keep the suite easy to maintain as it grows.",
+      "name": "spring-boot-test",
+      "description": "Shapes the test architecture, framework conventions, and maintainability patterns for Java and Kotlin Spring Boot services. Applies the Practical Test Pyramid end-to-end: the right test type for each class, consistent structure across the codebase, and conventions that keep the suite easy to maintain as it grows. Includes skills for both Kotlin (Kotest+MockK or JUnit5+Mockito) and Java (JUnit5+Mockito+AssertJ). Stack: Spring Boot 3.4+, TestContainers, WireMock.",
       "author": {
         "name": "Arnia"
       },
@@ -16,22 +16,7 @@
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/arezaeinia/claude-plugins.git",
-        "path": "plugins/spring-boot-kotlin-test",
-        "ref": "main"
-      },
-      "homepage": "https://github.com/arezaeinia/claude-plugins"
-    },
-    {
-      "name": "spring-boot-java-test",
-      "description": "Shapes the test architecture, framework conventions, and maintainability patterns for Java/Spring Boot services. Applies the Practical Test Pyramid end-to-end: the right test type for each class, consistent structure across the codebase, and conventions that keep the suite easy to maintain as it grows. Stack: Java 21, Spring Boot 3.4+, JUnit 5, Mockito, AssertJ, TestContainers.",
-      "author": {
-        "name": "Arnia"
-      },
-      "category": "testing",
-      "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/arezaeinia/claude-plugins.git",
-        "path": "plugins/spring-boot-java-test",
+        "path": "plugins/spring-boot-test",
         "ref": "main"
       },
       "homepage": "https://github.com/arezaeinia/claude-plugins"
