@@ -6,6 +6,8 @@ It applies the [Practical Test Pyramid](https://martinfowler.com/articles/practi
 
 Two skills are included — one for Kotlin projects and one for Java projects. Claude selects the right skill automatically based on the language it detects in your project. Both skills also handle mixed Kotlin+Java modules and detect the actual test framework from your build file.
 
+🟢 **Green** = layer under test &nbsp;&nbsp;|&nbsp;&nbsp; 🔵 **Blue** = layer being mocked &nbsp;&nbsp;|&nbsp;&nbsp; ⚫ **Gray** = not directly involved
+
 <table>
 <tr>
 <td>
@@ -81,14 +83,6 @@ graph TD
 </td>
 </tr>
 </table>
-
-## Color Tips
-
-| Color      | Meaning                           |
-|------------|-----------------------------------|
-| 🟢 Green   | The layer under test              |
-| 🔵 Blue    | The layer being mocked            |
-| ⚫ Gray    | Not directly involved in the test |
 
 ## Skills
 
